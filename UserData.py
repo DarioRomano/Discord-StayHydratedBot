@@ -3,14 +3,15 @@ import datetime
 
 class UserData:
     """A class used for managing timers and preferences of users"""
-    def __init__(self, server_id="", channel_id=""):
-        self.dm = False
+    def __init__(self, guild=None, channel=None):
+        self.dm = True
         self.pause = False
         self.drink_break = datetime.timedelta(seconds=3600)
         self.last_drink = datetime.datetime.now()
         self.total = 0
-        self.server = server_id
-        self.channel = channel_id
+        self.guild = guild
+        self.channel = channel
+        self.reminded = False
 
     def can_dm(self):
         return self.dm
@@ -24,6 +25,7 @@ class UserData:
     def drink(self):
         self.last_drink = datetime.datetime.now()
         self.total += 1
+        self.reminded = False
 
     def toggle_dm(self):
         self.dm = not self.dm
@@ -39,3 +41,13 @@ class UserData:
 
     def set_break(self, time):
         self.drink_break = time
+
+    def update_channel(self, guild, channel):
+        self.guild = guild
+        self.channel = channel
+
+    def was_reminded(self):
+        return self.reminded
+
+    def remind(self):
+        self.reminded = True
