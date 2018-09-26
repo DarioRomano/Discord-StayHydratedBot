@@ -50,7 +50,7 @@ bot = commands.Bot(command_prefix=prefix)
 async def autosave():  # Background autosave
     while not bot.is_closed():
         save()
-        await asyncio.sleep(5)
+        await asyncio.sleep(60)
 
 
 async def remind(user: int):
@@ -73,7 +73,9 @@ async def on_ready():
 
 
 # Commands available to everyone
-@bot.command(name="sip", pass_context=True)  # Used by users to indicate they've drank and when to be reminded
+@bot.command(name="sip", pass_context=True, brief="Tells the bot you've hydrated yourself",
+             description="Can be followed by in how much time you want to bot to remind you to drink next, for example %ssip 2h" % prefix)
+# Used by users to indicate they've drank and when to be reminded
 async def sip(ctx: commands.Context, *time):
     dm = ctx.guild is None
     if not dm:
@@ -112,7 +114,8 @@ async def sip(ctx: commands.Context, *time):
     await remind(ctx.author.id)
 
 
-@bot.command(name="total", pass_context=True)  # Used by users to check how many times they've drank
+@bot.command(name="total", pass_context=True, brief="Displays how many times you've drunk")
+# Used by users to check how many times they've drank
 async def total(ctx: commands.Context):
     dm = ctx.guild is None
     if not dm:
